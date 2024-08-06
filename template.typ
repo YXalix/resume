@@ -20,7 +20,7 @@
 #let resume(
   size: 10pt,
   themeColor: rgb(38, 38, 125),
-  top: 1.5cm,
+  top: 2cm,
   bottom: 2cm,
   left: 2cm,
   right: 2cm,
@@ -37,7 +37,7 @@
     left: left,
     right: right,
   ))
-  
+
   // 基础字体设定
   set text(font: (font.main, font.cjk), size: size, lang: "zh")
 
@@ -46,11 +46,11 @@
 
   // 二级标题下加一条横线
   show heading.where(level: 2): it => stack(
-    v(0.3em),
+    // v(0.2em),
     it,
-    v(0.6em),
+    v(0.2em),
     line(length: 100%, stroke: 0.05em + themeColor),
-    v(0.1em),
+    // v(0.1em),
   )
   
   // 更改 bullet list 的图标
@@ -77,14 +77,13 @@
   
   // 首部与照片
   grid(
-    columns: (auto, 1fr, photographWidth),
-    gutter: (gutterWidth, 0em),
-    header,
+    columns: (photographWidth, 1fr, auto),
     if (photograph != "") {
       image(photograph, width: photographWidth)
-    }
+    },
+    gutter: (gutterWidth, 0em),
+    header
   )
-  
   body
 }
 
@@ -112,41 +111,90 @@
   )
 })
 
-
-// 个人信息
-#let info(
-  color: black,
-  ..infos
+#let infoitem(
+  icon: icon,
+  content: content,
 ) = {
-    set text(font: (font.mono, font.cjk), fill: color)
-    infos.pos().map(dir => {
-      box({
-        if "icon" in dir {
-          if (type(dir.icon) == "string") {
-            icon(dir.icon)
-          } else {
-            dir.icon
-          }
-        }
-        h(0.15em)
-        if "link" in dir {
-          link(dir.link, dir.content)
-        } else {
-          dir.content
-        }
-      })
-    }).join(h(0.5em) + "·" + h(0.5em))
-    v(0.5em)
+  set align(left)
+  set text(font: (font.mono, font.cjk), fill: black)
+  grid(
+    columns: (auto, auto),
+    gutter: (5pt),
+    icon, content
+  )
 }
 
 
-// 日期： 颜色变灰
+// person info
+#let person(
+  color: black,
+  // ap,
+  home,
+  school,
+  major,
+  phone,
+  email,
+  github
+) = {
+  set align(left+bottom)
+  v(0.3em)
+  set text(font: (font.mono, font.cjk), fill: color, size: 14pt)
+  // ap
+  set text(size: 10pt)
+  grid(
+    columns: (1fr, 1fr, 1fr),
+    gutter: (1em),
+    home, school, major,
+    phone, email, github
+  )
+}
+
+
+// 教育背景
+#let education(
+  date,
+  school,
+  desc
+) = {
+  set align(right)
+  set text(font: (font.main, font.cjk), size: 1em)
+  grid(
+    columns: (auto, 1fr),
+    gutter: (5pt),
+    date, school
+  )
+  desc
+}
+
+
+
+#let internship(
+  date,
+  position,
+  desc
+) = {
+  set text(font: (font.main, font.cjk), size: 1em)
+  v(0.1em)
+  grid(
+    columns: (1fr, auto),
+    gutter: (0em),
+    date, position
+  )
+  v(-0.5em)
+  grid(
+    gutter: (0em),
+    desc
+  )
+}
+
+
+// 日期： 
 #let date(body) = text(
-  fill: rgb(128, 128, 128),
-  size: 0.9em,
+  weight: "extralight",
+  fill: rgb(0, 0, 0),
+  size: 1.2em,
   body
 )
-
 
 // 技术: 字体变细
 #let tech(body) = block({
@@ -158,15 +206,18 @@
 #let item(
   title,
   desc,
-  endnote
+  endnote,
+  data,
 ) = {
   set text(font: (font.main, font.cjk), size: 1em)
-  v(0.1em)
+  // v(0.1em)
   grid(
     columns: (30%, 1fr, auto),
     gutter: (0em),
     title, desc, endnote
   )
+  v(-0.4em)
+  data
 }
 
 // 研究
